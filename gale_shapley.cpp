@@ -3,7 +3,7 @@
 #include<queue>
 #include<string>
 #include<fstream>
-//finish number theory. hpp as well
+
 #include<vector>
 class Student{
     int id; // unique 
@@ -148,9 +148,4 @@ int main(){
         file_out<<sys;// yyaay
     }
 }
-//error -- check 
 
-// some questions -- go thru what was learnt -- try implementing stuff again and see what can be imporved 
-// what are some practises to avoid common errors
-// write code in a flow btw
-// try strassen T_T
