@@ -1,9 +1,11 @@
 /*
-    all algos -- adjacency structure 
+    all algos -- adjacency list representation
 */
-typedef int elt; // can change to long long int later 
+ // can change to custom types
 #include<vector>
 #include<iostream>
+typedef int elt;
+
 class Graph{
     std::vector<std::vector<elt>>adj;
     public:
