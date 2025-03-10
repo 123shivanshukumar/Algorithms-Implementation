@@ -1,23 +1,29 @@
+/*
+Finds the kth smallest element in O(n) time, based on median of median select algorithm
+Also contains Lomuto's and Hoare's algorithms for partitioning an array with given pivot
+*/
+
 #include<iostream>
 #include<vector>
 #include<algorithm>
-//shud do some leetcode and 450 Dsa to get coding fluency -- go through what errors annoyed you the most
-// - what input 
-// - what shud be avoided 
-int Lomuto_partition(std::vector<int>&vec, int pivot, int l, int r){
+
+int Lomuto_partition(std::vector<int>&vec, int pivot, int l, int r){ // vec[l...r]
+    // swap pivot with the last element
     int temp = vec[pivot];
     vec[pivot] = vec[r];
     vec[r] = temp; 
+    // set i to the l
     int i = l;
     int key = vec[r];
     for(int j = l; j < r ;j++){
-        if(vec[j] < key){
+        if(vec[j] < key){ // swap with i and update if found a smaller element
             temp = vec[i];
             vec[i] = vec[j];
             vec[j] = temp;
             i++;
         }
     }
+    // swap the pivot element with i and return its position in the array relative to l
     temp = vec[r];
     vec[r] = vec[i];
     vec[i] = temp;
@@ -40,7 +46,7 @@ void Hoare_partition(std::vector<int>&vec, int pivot, int l, int r){
         }
     }
 }
-// might have long long int 
+// finds median of a 5 element array, if less elements, pad with +inf
 int median(std::vector<int> vec, int l , int r){
     std::vector<int>temp;
     for(int j = 0 ; j < 5 ; j++){
@@ -50,29 +56,34 @@ int median(std::vector<int> vec, int l , int r){
     std::sort(temp.begin(),temp.end());
     return temp[2];
 }
-// int access(std::vector<int>& vec,int l, int r, int i){} // to access the right elt / avoid padding
 
-int MoM_select(std::vector<int>&vec, int l, int r, int k){ // correct
+
+int MoM_select(std::vector<int>&vec, int l, int r, int k){ 
+    //base case : sort and find if size is smaller than 10
     if(r-l <= 9){
         std::sort(vec.begin()+l, vec.begin()+r+1);
         return vec[k+l];
     }
+    // vector of subgroup medians
     std::vector<int>medians;
-    int offset = (r-l+1)%5;
+    int offset = (r-l+1)%5; // modulo wrt 5
+    
     for(int j = l; j <= r - offset; j+=5 ){
         medians.push_back(median(vec,j,r));
     }
-    if(offset !=0 ) medians.push_back(median(vec,r-offset+1,r));
-    int n = medians.size();
-    int mom = MoM_select(medians, 0, n - 1 ,n/2 );
     
-    int idx;
+    if(offset !=0 ) medians.push_back(median(vec,r-offset+1,r)); 
+    
+    int n = medians.size();
+    int mom = MoM_select(medians, 0, n - 1 ,n/2 ); // find the median of these medians
+    
+    int idx; // find index of the mom
     for(int j = l ; j <=r; j++){
         if(mom == vec[j]){idx = j;break;}
     }
-    // std::cout<<idx<<std::endl;
-    int p = Lomuto_partition(vec,idx,l,r);
-    // std::cout<<p<<std::endl;
+    
+    int p = Lomuto_partition(vec,idx,l,r); // partition and find the position of mom
+    
     if(p == k){
         return mom;
     }
@@ -80,20 +91,6 @@ int MoM_select(std::vector<int>&vec, int l, int r, int k){ // correct
         return MoM_select(vec,l,l+p-1,k);
     }
     else{
-        return MoM_select(vec,p+1+l,r,k-(p+1)); // k is the rank in this subarray
+        return MoM_select(vec,p+1+l,r,k-(p+1)); 
     }
 }
-
-
-//testing functionalities
-void print(std::vector<int>&v){for(auto elt:v){std::cout<<elt<<" ";}std::cout<<std::endl;}
-void input(std::vector<int>&v){for(auto& elt:v){std::cin>>elt;}}
-int main(){
-    int size,k;
-    std::cin>>size>>k;
-    std::vector<int> vec(size);
-    input(vec);
-    std::cout<<MoM_select(vec,0,size-1,k)<<std::endl;
-}
-/*
-deadline do all tehe alofs somehow in 30 mins common use all ur energy */
