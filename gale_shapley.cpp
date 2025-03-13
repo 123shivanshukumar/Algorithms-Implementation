@@ -99,18 +99,6 @@ std::istream& operator>>(std::istream& stream, System& sys){
     int size;
     stream>>size;    
     sys.n = size;
-    // Student stud;
-    // Course course;
-    // int stud_id, course_id;
-    // for(int j = 0; j < sys.n; j++){
-    //     std::cin>>stud>>course;
-    //     stud_id = stud.get_id();
-    //     course_id = course.get_id();
-    //     sys.course_list[course_id] = course;
-    //     sys.student_list[stud_id] = stud;
-    // }
-    // std::vector<int>row(size);
-    //input the course preferecne 
     int course_id,stud_id;
     for(int j = 0; j < size ; j++){
         for(int i = 0; i < size; i++){ //input is the id of student 
@@ -130,22 +118,3 @@ std::istream& operator>>(std::istream& stream, System& sys){
     }
     return stream;
 }
-void System::print(){//std::ofstream& file_out
-    
-}
-int main(){
-    std::string input = "input00.txt"; // filename[6]
-    std::string output = "output00.txt";
-    for(int j = 0 ; j < 10; j++)
-    {   
-        System sys;
-        input[6] = '0'+j;
-        output[7] = '0'+j;
-        std::ifstream file_in(input);
-        file_in>>sys;
-        std::ofstream file_out(output);
-        sys.gale_shapley();
-        file_out<<sys;// yyaay
-    }
-}
-
