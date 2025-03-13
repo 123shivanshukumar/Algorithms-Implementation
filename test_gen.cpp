@@ -109,17 +109,3 @@ void mat_mul_strassen(const std::vector<std::vector<int>> &A, const std::vector<
         }
     }
 }
-int main(){
-    
-    std::vector<std::vector<int>>A(4,std::vector<int>(4)),B(4,std::vector<int>(4)), C(4,std::vector<int>(4));
-    input(A);
-    input(B);
-    mat_mul_strassen(A,B,C);
-    print(C);
-}
-
-// not prioity but lot of mem and speed optimisations to be done
-
-
-// implement all codes - even the non trivial ones to get famililarity -- do previous weeks leetcode -- see sol dont hesitate
-// go do DPV, CLRS and tuts -- also prev tuts atomically -- do the remaining codes quickly
