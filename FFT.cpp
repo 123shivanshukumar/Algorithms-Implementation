@@ -1,18 +1,19 @@
 #include<iostream>
 #include<vector>
 #include<cmath>
-const double pi = acos(-1);
+const double pi = acos(-1); // constant pi
 class Complex{
-    double real;
-    double imaginary;
+    double real,imaginary;
     public:
         Complex(){}
-        Complex(int n){
+        Complex(int n){ // intialise prinicipal nth root of unity
             real = cos(2*pi/n);
             imaginary = sin(2*pi/n);
-        } // nth root of unity
+        } 
         Complex(double r, double i):real(r), imaginary(i){}
+        
         double get_real(){return real;}
+        
         Complex operator*(Complex& other){
             double real_op = real*(other.real) - imaginary*(other.imaginary);
             double imaginary_op = imaginary*(other.real) + real*(other.imaginary);
@@ -24,26 +25,29 @@ class Complex{
         Complex operator-(Complex other){
             return Complex(real - other.real, imaginary - other.imaginary);
         }
-        Complex operator/(int scale){
+        Complex operator/(int scale){ // for scaling in the inverse FFT step
             return Complex(real/scale,imaginary/scale);
         }
 };
-// lots of errors in indexing and size allocation - shud be faster and thought ful particularly in for loops
+
 class Polynomial{
     int degree;
     std::vector<double>coefficients;
+
     public:
         Polynomial(){}
-        Polynomial(std::vector<Complex>coeffs){
+        Polynomial(std::vector<Complex>coeffs){ // to initialise the product polynomial with real coefficients
             degree = coeffs.size()-1;
             coefficients.resize(degree+1);
             for(int j = 0; j <=degree ; j++){
                 coefficients[j] = coeffs[j].get_real();
             }
         }
-        friend Polynomial operator*(Polynomial& p1, Polynomial& p2);
-        friend std::istream& operator>>(std::istream&, Polynomial&);
-        void pad(int deg_max, std::vector<Complex>& coeff){
+
+        friend Polynomial operator*(Polynomial& p1, Polynomial& p2); // multiply two polynomials and give output as polynomial
+        friend std::istream& operator>>(std::istream&, Polynomial&); // take input 
+
+        void pad(int deg_max, std::vector<Complex>& coeff){ // to pad the coefficient vectors as needed 
             coeff.resize(deg_max);
             for(int j = 0; j <= degree ; j++){
                 coeff[j] = Complex(coefficients[j],0);
@@ -52,7 +56,8 @@ class Polynomial{
                 coeff[j] = Complex(0,0);
             }
         }
-        double evaluate(double x){
+
+        double evaluate(double x){ // evaluate by horner's rule
             int j = coefficients.size()-1;
             double val = 0;
             while(j>=0){
@@ -113,7 +118,7 @@ Polynomial operator*(Polynomial& p1, Polynomial& p2){
     while(x < deg_max){
         x = (x<<1); // deg at most 2^32
     }
-    deg_max = (x<<1); // to finally double the degree -- now everything set 
+    deg_max = (x<<1); // to finally double the degree 
     std::vector<Complex>coeff_1,coeff_2,coeff_3;
     p1.pad(deg_max, coeff_1);
     p2.pad(deg_max, coeff_2);
